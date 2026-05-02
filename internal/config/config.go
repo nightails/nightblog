@@ -16,10 +16,48 @@ type Config struct {
 }
 
 func defaultConfig() Config {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return Config{}
+	}
+
 	return Config{
-		LocalLibraryPath: "$HOME/Documents/blogs/",
+		LocalLibraryPath: filepath.Join(homeDir, "Documents", "Blogs"),
 		RemoteLibraryURL: "",
 	}
+}
+
+// GetConfig loads and parses the application's configuration from a JSON file, returning the resulting Config object.
+func GetConfig() (*Config, error) {
+	cfgFile, err := getConfigFile()
+	if err != nil {
+		return nil, err
+	}
+	defer cfgFile.Close()
+
+	var cfg Config
+	if err := json.NewDecoder(cfgFile).Decode(&cfg); err != nil {
+		return nil, err
+	}
+
+	return &cfg, nil
+}
+
+// Write saves the configuration to a JSON file in the user's home directory.
+func (cfg *Config) Write() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	cfgFile := filepath.Join(homeDir, configPath, configFile)
+	data, err := json.MarshalIndent(cfg, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(cfgFile, data, 0644); err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetConfigFile retrieves the configuration file for the application.
