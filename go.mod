@@ -1,3 +1,3 @@
-module blogs_manager
+module nightblog
 
 go 1.26

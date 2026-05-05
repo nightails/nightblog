@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-const configPath = ".config/blogs_manager"
+const configPath = ".config/nightblog"
 const configFile = "config.json"
 
 type Config struct {

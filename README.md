@@ -16,7 +16,7 @@ Blogs Manager is a command-line utility written in Go designed to help manage bl
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd blogs_manager
+   cd nightblog
    ```
 
 2. **Install dependencies**:
@@ -45,7 +45,7 @@ go run main.go
 ### Build the application
 To compile the binary:
 ```bash
-go build -o blogs_manager main.go
+go build -o nightblog main.go
 ```
 
 ## Scripts
