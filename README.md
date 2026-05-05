@@ -1,10 +1,10 @@
-# Blogs Manager
+# Nightblog
 
 A simple terminal application for managing nightails' blogs.
 
 ## Overview
 
-Blogs Manager is a command-line utility written in Go designed to help manage blog content locally. It handles configuration management and ensures the local library directory exists.
+Nightblog is a command-line utility written in Go designed to help manage blog content locally. It handles configuration management and ensures the local library directory exists.
 
 ## Requirements
 
@@ -27,7 +27,7 @@ Blogs Manager is a command-line utility written in Go designed to help manage bl
 
 3. **Configuration**:
    The application automatically creates a default configuration file at:
-   `~/.config/blogs_manager/config.json`
+   `~/.config/nightblog/config.json`
 
    You can manually edit this file to change settings:
    - `LocalLibraryPath`: Where your blogs are stored (default: `~/Documents/Blogs`).
