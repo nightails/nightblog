@@ -13,6 +13,8 @@ const configFile = "config.json"
 type Config struct {
 	LocalLibraryPath string
 	RemoteLibraryURL string
+
+	DefaultTextEditor string
 }
 
 func defaultConfig() Config {
@@ -22,8 +24,9 @@ func defaultConfig() Config {
 	}
 
 	return Config{
-		LocalLibraryPath: filepath.Join(homeDir, "Documents", "Blogs"),
-		RemoteLibraryURL: "",
+		LocalLibraryPath:  filepath.Join(homeDir, "Documents", "Blogs"),
+		RemoteLibraryURL:  "",
+		DefaultTextEditor: "nvim",
 	}
 }
 
