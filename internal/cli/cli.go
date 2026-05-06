@@ -15,6 +15,10 @@ func Run(cfg *config.Config) {
 			fmt.Println("Missing title argument. Usage: new <title>")
 			return
 		}
-		fmt.Println("Creating new blog...")
+		if err := createNewBlog(cfg, os.Args[2]); err != nil {
+			fmt.Printf("Failed to create new blog: %v\n", err)
+			return
+		}
+		fmt.Println("Blog created successfully!")
 	}
 }
