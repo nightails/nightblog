@@ -4,7 +4,7 @@ A simple terminal application for managing nightails' blogs.
 
 ## Overview
 
-Nightblog is a command-line utility written in Go designed to help manage blog content locally. It handles configuration management and ensures the local library directory exists.
+Nightblog is a command-line utility written in Go designed to help manage blog content locally. It handles configuration management, ensures the local library directory exists, and allows you to quickly create new blog posts with predefined frontmatter.
 
 ## Requirements
 
@@ -26,7 +26,7 @@ Nightblog is a command-line utility written in Go designed to help manage blog c
    ```
 
 3. **Configuration**:
-   The application automatically creates a default configuration file at:
+   The application automatically creates a default configuration file upon the first run at:
    `~/.config/nightblog/config.json`
 
    You can manually edit this file to change settings:
@@ -39,7 +39,7 @@ Nightblog is a command-line utility written in Go designed to help manage blog c
 ### Run the application
 To run the application directly:
 ```bash
-go run main.go
+go run main.go [command]
 ```
 
 ### Build the application
@@ -47,6 +47,9 @@ To compile the binary:
 ```bash
 go build -o nightblog main.go
 ```
+
+### Available Commands
+- `new <title>`: Creates a new blog post file with basic frontmatter in your `LocalLibraryPath`.
 
 ## Scripts
 - TODO: Add build/test scripts (e.g., Makefile).
@@ -59,9 +62,12 @@ go build -o nightblog main.go
 
 ## Project Structure
 
-- `main.go`: Application entry point.
-- `internal/config/`: Configuration loading and management logic.
-- `internal/library/`: Library directory verification and creation.
+- `main.go`: Application entry point and initialization logic.
+- `internal/cli/`: Command-line interface logic and command implementations.
+  - `cli.go`: Main CLI router.
+  - `cmd_new.go`: Implementation of the `new` command.
+- `internal/config/`: Configuration loading, parsing, and management logic.
+- `internal/library/`: Library directory verification and creation utilities.
 - `go.mod`: Go module definition.
 
 ## License
