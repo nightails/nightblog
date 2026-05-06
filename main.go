@@ -28,16 +28,16 @@ func main() {
 func initApp() (*config.Config, error) {
 	cfg, err := config.GetConfig()
 	if err != nil {
-		return nil, fmt.Errorf("Failed to load config: %v", err)
+		return nil, fmt.Errorf("failed to load config: %v", err)
 	}
 
 	if err := library.VerifyLocalLibraryPath(cfg.LocalLibraryPath); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			if err := library.MakeLibraryDir(cfg.LocalLibraryPath); err != nil {
-				return nil, fmt.Errorf("Failed to create library directory: %v", err)
+				return nil, fmt.Errorf("failed to create library directory: %v", err)
 			}
 		} else {
-			return nil, fmt.Errorf("Failed to verify library path: %v", err)
+			return nil, fmt.Errorf("failed to verify library path: %v", err)
 		}
 	}
 
