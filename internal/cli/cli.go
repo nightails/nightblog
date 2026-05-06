@@ -2,10 +2,11 @@ package cli
 
 import (
 	"fmt"
+	"nightblog/internal/config"
 	"os"
 )
 
-func Run() {
+func Run(cfg *config.Config) {
 	switch os.Args[1] {
 	default:
 		fmt.Printf("Unknown command: %s\n\n", os.Args[1])
