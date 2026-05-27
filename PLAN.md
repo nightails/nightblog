@@ -12,14 +12,14 @@ The application will use a configuration file (e.g., `config.json` or `config.ya
 
 ## CLI Design
 The app will be invoked via the terminal with the following commands:
-- `blogapp new <title>`: Creates a new markdown file in `blogs_dir` and opens it.
-- `blogapp edit <title>`: Opens an existing blog post from `blogs_dir` for editing.
-- `blogapp list`: Lists all files in `blogs_dir`.
+- `nightblog new <title>`: Creates a new markdown file in `blogs_dir` and opens it.
+- `nightblog edit <title>`: Opens an existing blog post from `blogs_dir` for editing.
+- `nightblog list`: Lists all files in `blogs_dir`.
 
 ## Go Implementation Structure
 
 ### 1. Project Setup
-- Initialize the Go module: `go mod init blogapp`.
+- Initialize the Go module: `go mod init nightblog`.
 - Use standard library packages: `os`, `path/filepath`, `os/exec`, `encoding/json`.
 
 ### 2. Configuration Management
