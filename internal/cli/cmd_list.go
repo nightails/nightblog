@@ -6,7 +6,7 @@ import (
 )
 
 func listBlogs(cfg *config.Config) ([]string, error) {
-	entries, err := os.ReadDir(cfg.LocalLibraryPath)
+	entries, err := os.ReadDir(cfg.LocalBlogsDir)
 	if err != nil {
 		return nil, err
 	}

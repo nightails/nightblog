@@ -29,7 +29,7 @@ func createNewBlog(cfg *config.Config, title string) error {
 	}
 
 	title = strings.Replace(title, " ", "-", -1)
-	file := filepath.Join(cfg.LocalLibraryPath, strings.ToLower(title)+".md")
+	file := filepath.Join(cfg.LocalBlogsDir, strings.ToLower(title)+".md")
 
 	if _, err := os.Stat(file); err == nil {
 		return fmt.Errorf("file %s already exists", file)

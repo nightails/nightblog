@@ -26,14 +26,14 @@ func main() {
 }
 
 func initApp() (*config.Config, error) {
-	cfg, err := config.GetConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load config: %v", err)
 	}
 
-	if err := library.VerifyLocalLibraryPath(cfg.LocalLibraryPath); err != nil {
+	if err := library.VerifyLocalLibraryPath(cfg.LocalBlogsDir); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if err := library.MakeLibraryDir(cfg.LocalLibraryPath); err != nil {
+			if err := library.MakeLibraryDir(cfg.LocalBlogsDir); err != nil {
 				return nil, fmt.Errorf("failed to create library directory: %v", err)
 			}
 		} else {

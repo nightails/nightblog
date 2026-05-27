@@ -2,19 +2,25 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 )
 
-const configPath = ".config/nightblog"
-const configFile = "config.json"
+func configPath() string {
+	cfgDir, _ := os.UserConfigDir()
+	return filepath.Join(cfgDir, "nightblog")
+}
+
+func configFilePath() string {
+	return filepath.Join(configPath(), "config.json")
+}
 
 type Config struct {
-	LocalLibraryPath string
-	RemoteLibraryURL string
+	LocalBlogsDir  string
+	RemoteBlogsURL string
 
-	DefaultTextEditor string
+	Editor string
 }
 
 func defaultConfig() Config {
@@ -24,22 +30,23 @@ func defaultConfig() Config {
 	}
 
 	return Config{
-		LocalLibraryPath:  filepath.Join(homeDir, "Documents", "Blogs"),
-		RemoteLibraryURL:  "",
-		DefaultTextEditor: "nvim",
+		LocalBlogsDir:  filepath.Join(homeDir, "Documents", "Blogs"),
+		RemoteBlogsURL: "",
+		Editor:         "nvim",
 	}
 }
 
-// GetConfig loads and parses the application's configuration from a JSON file, returning the resulting Config object.
-func GetConfig() (*Config, error) {
-	cfgFile, err := getConfigFile()
+// LoadConfig loads and parses the application's configuration from a JSON file, returning the resulting Config object.
+func LoadConfig() (*Config, error) {
+	file, err := openConfigFile()
 	if err != nil {
-		return nil, err
+		// TODO: replace with logger. May need to consolidate, check what being logged in the function first.
+		return nil, fmt.Errorf("failed to open config file: %w", err)
 	}
-	defer cfgFile.Close()
+	defer file.Close()
 
 	var cfg Config
-	if err := json.NewDecoder(cfgFile).Decode(&cfg); err != nil {
+	if err := json.NewDecoder(file).Decode(&cfg); err != nil {
 		return nil, err
 	}
 
@@ -48,56 +55,50 @@ func GetConfig() (*Config, error) {
 
 // Write saves the configuration to a JSON file in the user's home directory.
 func (cfg *Config) Write() error {
-	homeDir, err := os.UserHomeDir()
+	file, err := openConfigFile()
 	if err != nil {
 		return err
 	}
-	cfgFile := filepath.Join(homeDir, configPath, configFile)
+	defer file.Close()
+
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(cfgFile, data, 0644); err != nil {
+	if _, err := file.Write(data); err != nil {
 		return err
 	}
 	return nil
 }
 
-// GetConfigFile retrieves the configuration file for the application.
+// openConfigFile retrieves the configuration file for the application.
 // NOTE: Close the file after use to prevent resource leaks.
-func getConfigFile() (*os.File, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, err
+func openConfigFile() (*os.File, error) {
+	_, err := os.Stat(configPath())
+	if err != nil && os.IsNotExist(err) {
+		if err := os.MkdirAll(configPath(), 0755); err != nil {
+			// TODO: replace with logger
+			return nil, fmt.Errorf("failed to create config directory: %w", err)
+		}
 	}
 
-	cfgDir := filepath.Join(homeDir, configPath)
-	cfgFilePath := filepath.Join(cfgDir, configFile)
-
-	file, err := os.Open(cfgFilePath)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			if err := os.MkdirAll(cfgDir, 0755); err != nil {
-				return nil, err
-			}
-
-			data, err := json.MarshalIndent(defaultConfig(), "", "  ")
-			if err != nil {
-				return nil, err
-			}
-
-			if err := os.WriteFile(cfgFilePath, data, 0644); err != nil {
-				return nil, err
-			}
-
-			file, err = os.Open(cfgFilePath)
-			if err != nil {
-				return nil, err
-			}
-
-			return file, nil
+	file, err := os.Open(configFilePath())
+	if err != nil && os.IsNotExist(err) {
+		file, err = os.Create(configFilePath())
+		if err != nil {
+			// TODO: replace with logger
+			return nil, fmt.Errorf("failed to create config file: %w", err)
 		}
-		return nil, err
+		data, err := json.MarshalIndent(defaultConfig(), "", "  ")
+		if err != nil {
+			// TODO: replace with logger
+			return nil, fmt.Errorf("failed to marshal default config: %w", err)
+		}
+		_, err = file.Write(data)
+		if err != nil {
+			// TODO: replace with logger
+			return nil, fmt.Errorf("failed to write default config to file: %w", err)
+		}
 	}
 
 	return file, nil
