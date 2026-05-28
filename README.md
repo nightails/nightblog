@@ -1,8 +1,7 @@
 # Nightblog
 
-A simple terminal application for managing blogs.
-
-## Overview
+> [!WARNING]  
+> This project is currently in heavy development. Expect breaking changes and incomplete features.
 
 Nightblog is a terminal application for managing and editing blog posts. It handles creating and editing blog posts with predefined frontmatter compatible with Astro.
 
