@@ -26,7 +26,7 @@ func main() {
 }
 
 func initApp() (*config.Config, error) {
-	cfg, err := config.LoadConfig()
+	cfg, err := config.LoadOrCreate()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load config: %v", err)
 	}

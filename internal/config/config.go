@@ -37,8 +37,8 @@ func defaultConfig() Config {
 	}
 }
 
-// LoadConfig loads and parses the application's configuration from a JSON file, returning the resulting Config object.
-func LoadConfig() (*Config, error) {
+// LoadOrCreate retrieves an existing configuration or generates a new default configuration if none exists.
+func LoadOrCreate() (*Config, error) {
 	file, err := openConfigFile()
 	if err != nil {
 		// TODO: replace with logger. May need to consolidate, check what being logged in the function first.
@@ -99,11 +99,13 @@ func openConfigFile() (*os.File, error) {
 			}
 			data, err := json.MarshalIndent(defaultConfig(), "", "  ")
 			if err != nil {
+				file.Close()
 				// TODO: replace with logger
 				return nil, fmt.Errorf("failed to marshal default config: %w", err)
 			}
 			_, err = file.Write(data)
 			if err != nil {
+				file.Close()
 				// TODO: replace with logger
 				return nil, fmt.Errorf("failed to write default config to file: %w", err)
 			}
