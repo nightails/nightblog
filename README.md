@@ -1,10 +1,10 @@
 # Nightblog
 
-A simple terminal application for managing nightails' blogs.
+A simple terminal application for managing blogs.
 
 ## Overview
 
-Nightblog is a command-line utility written in Go designed to help manage blog content locally. It handles configuration management, ensures the local library directory exists, and allows you to quickly create new blog posts with predefined frontmatter.
+Nightblog is a terminal application for managing and editing blog posts. It handles creating and editing blog posts with predefined frontmatter compatible with Astro.
 
 ## Requirements
 
@@ -15,12 +15,11 @@ Nightblog is a command-line utility written in Go designed to help manage blog c
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone github.com/nightails/nightblog 
    cd nightblog
    ```
 
 2. **Install dependencies**:
-   This project uses only the Go standard library, so no external dependencies are required.
    ```bash
    go mod download
    ```
@@ -30,9 +29,9 @@ Nightblog is a command-line utility written in Go designed to help manage blog c
    `~/.config/nightblog/config.json`
 
    You can manually edit this file to change settings:
-   - `LocalLibraryPath`: Where your blogs are stored (default: `~/Documents/Blogs`).
-   - `RemoteLibraryURL`: URL for remote blog synchronization (TODO).
-   - `DefaultTextEditor`: Your preferred editor (default: `nvim`).
+   - `LocalBlogsDir`: Where your blogs are stored (default: `~/Documents/Blogs`).
+   - `RemoteBlogsURL`: URL for remote blog synchronization (currently unused).
+   - `Editor`: Your preferred editor (default: `nvim`).
 
 ## Usage
 
@@ -49,26 +48,30 @@ go build -o nightblog main.go
 ```
 
 ### Available Commands
-- `new <title>`: Creates a new blog post file with basic frontmatter in your `LocalLibraryPath`.
+- `new <title>`: Creates a new blog post file with basic frontmatter in your `LocalBlogsDir`.
+- `list`: Lists all blog posts in your `LocalBlogsDir`.
 
-## Scripts
-- TODO: Add build/test scripts (e.g., Makefile).
-
-## Environment Variables
-- None currently used. Configuration is handled via `config.json`.
-
-## Tests
-- TODO: Implement unit and integration tests.
+## Features
+- [x] Create new blog posts with frontmatter.
+- [x] List existing blog posts.
+- [ ] Edit existing blog posts.
+- [ ] Terminal User Interface (TUI) with Bubble Tea (Work in progress).
+- [ ] Remote synchronization.
 
 ## Project Structure
 
-- `main.go`: Application entry point and initialization logic.
-- `internal/cli/`: Command-line interface logic and command implementations.
-  - `cli.go`: Main CLI router.
-  - `cmd_new.go`: Implementation of the `new` command.
-- `internal/config/`: Configuration loading, parsing, and management logic.
-- `internal/library/`: Library directory verification and creation utilities.
-- `go.mod`: Go module definition.
+- `internal/`:
+  - `blog/`: Core blog logic (creation, listing, formatting).
+  - `cli/`: Command-line interface logic using Cobra.
+  - `config/`: Configuration loading, parsing, and management logic.
+  - `storage/`: Storage and directory initialization.
+  - `tui/`: Planned Terminal User Interface implementation.
+  - `ui/`: UI styles and components (Lipgloss).
+
+## Dependencies
+- [Cobra](https://github.com/spf13/cobra): CLI framework.
+- [Bubble Tea](https://github.com/charmbracelet/bubbletea): TUI framework (In development).
+- [Lipgloss](https://github.com/charmbracelet/lipgloss): Terminal styling.
 
 ## License
 - TODO: Add license information.
