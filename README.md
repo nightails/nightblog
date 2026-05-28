@@ -74,4 +74,5 @@ go build -o nightblog main.go
 - [Lipgloss](https://github.com/charmbracelet/lipgloss): Terminal styling.
 
 ## License
-- TODO: Add license information.
+
+This project is licensed under the [MIT License](LICENSE).
