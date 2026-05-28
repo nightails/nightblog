@@ -37,8 +37,8 @@ func defaultConfig() Config {
 	}
 }
 
-// LoadOrCreate retrieves an existing configuration or generates a new default configuration if none exists.
-func LoadOrCreate() (*Config, error) {
+// Load retrieves an existing configuration or generates a new default configuration if none exists.
+func Load() (*Config, error) {
 	file, err := openConfigFile()
 	if err != nil {
 		// TODO: replace with logger. May need to consolidate, check what being logged in the function first.

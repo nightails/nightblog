@@ -25,13 +25,13 @@ func main() {
 }
 
 func initApp() (*config.Config, error) {
-	cfg, err := config.LoadOrCreate()
+	cfg, err := config.Load()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load config: %v", err)
 	}
 
-	if err := storage.VerifyOrCrate(cfg); err != nil {
-		return nil, fmt.Errorf("failed to verify or create storage: %v", err)
+	if err := storage.Init(cfg); err != nil {
+		return nil, fmt.Errorf("failed to initialize storage: %v", err)
 	}
 
 	return cfg, nil

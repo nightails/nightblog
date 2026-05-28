@@ -7,10 +7,10 @@ import (
 	"os"
 )
 
-func VerifyOrCrate(cfg *config.Config) error {
-	if err := verifyLocalStorage(cfg.LocalBlogsDir); err != nil {
+func Init(cfg *config.Config) error {
+	if err := ensureLocal(cfg.LocalBlogsDir); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if err := makeStoragePath(cfg.LocalBlogsDir); err != nil {
+			if err := makeLocalDir(cfg.LocalBlogsDir); err != nil {
 				return fmt.Errorf("failed to create storage directory: %v", err)
 			}
 		} else {
@@ -21,7 +21,7 @@ func VerifyOrCrate(cfg *config.Config) error {
 	return nil
 }
 
-func verifyLocalStorage(path string) error {
+func ensureLocal(path string) error {
 	stat, err := os.Stat(path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -35,6 +35,6 @@ func verifyLocalStorage(path string) error {
 	return nil
 }
 
-func makeStoragePath(path string) error {
+func makeLocalDir(path string) error {
 	return os.MkdirAll(path, 0755)
 }
