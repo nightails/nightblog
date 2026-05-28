@@ -19,27 +19,27 @@ The app will be invoked via the terminal with the following commands:
 ## Go Implementation Structure
 
 ### 1. Project Setup
-- Initialize the Go module: `go mod init nightblog`.
-- Use standard library packages: `os`, `path/filepath`, `os/exec`, `encoding/json`.
+- [x] Initialize the Go module: `go mod init nightblog`.
+- [x] Use standard library packages: `os`, `path/filepath`, `os/exec`, `encoding/json`.
 
 ### 2. Configuration Management
-- **Struct Definition**: Create a `Config` struct with fields for `BlogsDir` and `Editor`.
-- **Config Path**: Use `os.UserConfigDir()` to find the standard configuration directory for the OS.
-- **Persistence**: Use `encoding/json` to read from and write to the config file.
-- **Initialization**: If the config doesn't exist, create it with sensible defaults (e.g., `editor: vim`).
+- [x] **Struct Definition**: Create a `Config` struct with fields for `BlogsDir` and `Editor`.
+- [x] **Config Path**: Use `os.UserConfigDir()` to find the standard configuration directory for the OS.
+- [x] **Persistence**: Use `encoding/json` to read from and write to the config file.
+- [x] **Initialization**: If the config doesn't exist, create it with sensible defaults (e.g., `editor: vim`).
 
 ### 3. CLI Command Handling
-- **Dispatching**: Use `os.Args` to identify the subcommand (`new`, `edit`, `list`).
-- **Argument Parsing**: Extract the blog title for `new` and `edit` commands from `os.Args[2:]`.
+- [ ] **Dispatching**: Use `os.Args` to identify the subcommand (`new`, `edit`, `list`).
+- [ ] **Argument Parsing**: Extract the blog title for `new` and `edit` commands from `os.Args[2:]`.
 
 ### 4. Feature Implementation
-- **List Command**:
-  - Use `os.ReadDir` on the configured `BlogsDir`.
-  - Iterate and print filenames (optionally filtering for `.md` files).
-- **New/Edit Command**:
-  - **Path Resolution**: Join `BlogsDir` with the filename using `filepath.Join`.
-  - **File Creation**: For `new`, check if the file exists; if not, create it using `os.Create`.
-  - **Terminal Editor Integration**:
-    - Use `os/exec.Command` to start the configured editor with the file path.
-    - **Important**: Connect `cmd.Stdin`, `cmd.Stdout`, and `cmd.Stderr` to the current process's standard streams to allow the interactive editor to take over the terminal.
-    - Use `cmd.Run()` to wait for the editor to close.
+- [ ] **List Command**:
+  - [ ] Use `os.ReadDir` on the configured `BlogsDir`.
+  - [ ] Iterate and print filenames (optionally filtering for `.md` files).
+- [ ] **New/Edit Command**:
+  - [ ] **Path Resolution**: Join `BlogsDir` with the filename using `filepath.Join`.
+  - [ ] **File Creation**: For `new`, check if the file exists; if not, create it using `os.Create`.
+  - [ ] **Terminal Editor Integration**:
+    - [ ] Use `os/exec.Command` to start the configured editor with the file path.
+    - [ ] **Important**: Connect `cmd.Stdin`, `cmd.Stdout`, and `cmd.Stderr` to the current process's standard streams to allow the interactive editor to take over the terminal.
+    - [ ] Use `cmd.Run()` to wait for the editor to close.

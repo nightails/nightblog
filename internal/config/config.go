@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -74,30 +75,40 @@ func (cfg *Config) Write() error {
 // openConfigFile retrieves the configuration file for the application.
 // NOTE: Close the file after use to prevent resource leaks.
 func openConfigFile() (*os.File, error) {
+	// create the config directory if not exist
 	_, err := os.Stat(configPath())
-	if err != nil && os.IsNotExist(err) {
-		if err := os.MkdirAll(configPath(), 0755); err != nil {
-			// TODO: replace with logger
-			return nil, fmt.Errorf("failed to create config directory: %w", err)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			if err := os.MkdirAll(configPath(), 0755); err != nil {
+				// TODO: replace with logger
+				return nil, fmt.Errorf("failed to create config directory: %w", err)
+			}
+		} else {
+			return nil, fmt.Errorf("failed to stat config path: %w", err)
 		}
 	}
 
+	// open or create the config file if not exist
 	file, err := os.Open(configFilePath())
-	if err != nil && os.IsNotExist(err) {
-		file, err = os.Create(configFilePath())
-		if err != nil {
-			// TODO: replace with logger
-			return nil, fmt.Errorf("failed to create config file: %w", err)
-		}
-		data, err := json.MarshalIndent(defaultConfig(), "", "  ")
-		if err != nil {
-			// TODO: replace with logger
-			return nil, fmt.Errorf("failed to marshal default config: %w", err)
-		}
-		_, err = file.Write(data)
-		if err != nil {
-			// TODO: replace with logger
-			return nil, fmt.Errorf("failed to write default config to file: %w", err)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			file, err = os.Create(configFilePath())
+			if err != nil {
+				// TODO: replace with logger
+				return nil, fmt.Errorf("failed to create config file: %w", err)
+			}
+			data, err := json.MarshalIndent(defaultConfig(), "", "  ")
+			if err != nil {
+				// TODO: replace with logger
+				return nil, fmt.Errorf("failed to marshal default config: %w", err)
+			}
+			_, err = file.Write(data)
+			if err != nil {
+				// TODO: replace with logger
+				return nil, fmt.Errorf("failed to write default config to file: %w", err)
+			}
+		} else {
+			return nil, fmt.Errorf("failed to open config file: %w", err)
 		}
 	}
 
