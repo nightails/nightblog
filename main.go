@@ -1,11 +1,10 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"nightblog/internal/cli"
 	"nightblog/internal/config"
-	"nightblog/internal/library"
+	"nightblog/internal/storage"
 	"os"
 )
 
@@ -31,14 +30,8 @@ func initApp() (*config.Config, error) {
 		return nil, fmt.Errorf("failed to load config: %v", err)
 	}
 
-	if err := library.VerifyLocalLibraryPath(cfg.LocalBlogsDir); err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			if err := library.MakeLibraryDir(cfg.LocalBlogsDir); err != nil {
-				return nil, fmt.Errorf("failed to create library directory: %v", err)
-			}
-		} else {
-			return nil, fmt.Errorf("failed to verify library path: %v", err)
-		}
+	if err := storage.VerifyOrCrate(cfg); err != nil {
+		return nil, fmt.Errorf("failed to verify or create storage: %v", err)
 	}
 
 	return cfg, nil
