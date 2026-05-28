@@ -7,7 +7,25 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/spf13/cobra"
 )
+
+func newCmd(cfg *config.Config) *cobra.Command {
+	return &cobra.Command{
+		Use:   "new <title>",
+		Short: "Create a new blog post",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := newBlog(cfg, args[0]); err != nil {
+				return fmt.Errorf("failed to create blog post: %v", err)
+			}
+
+			fmt.Fprintln(cmd.OutOrStdout(), "Blog post created successfully")
+			return nil
+		},
+	}
+}
 
 type blog struct {
 	title         string
@@ -19,7 +37,7 @@ type blog struct {
 	draft         bool
 }
 
-func createNewBlog(cfg *config.Config, title string) error {
+func newBlog(cfg *config.Config, title string) error {
 	b := blog{
 		title:         title,
 		description:   "A short description",

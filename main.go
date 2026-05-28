@@ -15,13 +15,10 @@ func main() {
 		return
 	}
 
-	if len(os.Args) < 2 {
-		// TODO: route to TUI
-		fmt.Println("Missing argument, TUI is not implemented yet")
-		return
+	if err := cli.Execute(cfg); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
-
-	cli.Run(cfg)
 }
 
 func initApp() (*config.Config, error) {

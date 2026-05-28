@@ -1,36 +1,30 @@
 package cli
 
 import (
-	"fmt"
 	"nightblog/internal/config"
-	"os"
+
+	"github.com/spf13/cobra"
 )
 
-func Run(cfg *config.Config) {
-	switch os.Args[1] {
-	default:
-		fmt.Printf("Unknown command: %s\n\n", os.Args[1])
+func Execute(cfg *config.Config) error {
+	rootCmd := newRootCmd(cfg)
+	return rootCmd.Execute()
+}
 
-	case "new":
-		if len(os.Args) < 3 {
-			fmt.Println("Missing title argument. Usage: new <title>")
-			return
-		}
-		if err := createNewBlog(cfg, os.Args[2]); err != nil {
-			fmt.Printf("Failed to create new blog: %v\n", err)
-			return
-		}
-		fmt.Println("Blog created successfully!")
-
-	case "list":
-		blogs, err := listBlogs(cfg)
-		if err != nil {
-			fmt.Printf("Failed to list blogs: %v\n", err)
-			return
-		}
-		fmt.Println("Blogs:")
-		for _, blog := range blogs {
-			fmt.Printf(" - %s\n", blog)
-		}
+func newRootCmd(cfg *config.Config) *cobra.Command {
+	rootCmd := &cobra.Command{
+		Use:   "nightblog",
+		Short: "Manage blog posts from the terminal",
+		Long:  "Nightblog is terminal application for creating, listing, and managing blog posts.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// TODO: route to TUI when it is implemented
+			// return tui.Run(cfg)
+			return cmd.Help()
+		},
 	}
+
+	rootCmd.AddCommand(newCmd(cfg))
+	rootCmd.AddCommand(listCmd(cfg))
+
+	return rootCmd
 }
