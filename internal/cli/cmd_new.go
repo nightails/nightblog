@@ -16,6 +16,7 @@ type blog struct {
 	publishedDate string
 	updatedDate   string
 	content       string
+	draft         bool
 }
 
 func createNewBlog(cfg *config.Config, title string) error {
@@ -26,6 +27,7 @@ func createNewBlog(cfg *config.Config, title string) error {
 		publishedDate: "",
 		updatedDate:   time.Now().Format(time.DateOnly),
 		content:       "# Blog content starts here",
+		draft:         true,
 	}
 
 	title = strings.Replace(title, " ", "-", -1)
@@ -43,7 +45,13 @@ func createNewBlog(cfg *config.Config, title string) error {
 }
 
 func (b blog) formatBlog() string {
-	frontmatter := fmt.Sprintf("---\ntitle: %s\ndescription: %s\npublishedDate: %s\nupdatedDate: %s\n---\n", b.title, b.description, b.publishedDate, b.updatedDate)
+	frontmatter := fmt.Sprintf(
+		"---\ntitle: %s\ndescription: %s\npublishedDate: %s\nupdatedDate: %s\n---\n",
+		b.title,
+		b.description,
+		b.publishedDate,
+		b.updatedDate,
+	)
 	blog := fmt.Sprintf("%s\n%s", frontmatter, b.content)
 	return blog
 }
