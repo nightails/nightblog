@@ -2,11 +2,8 @@ package cli
 
 import (
 	"fmt"
+	"nightblog/internal/blog"
 	"nightblog/internal/config"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +14,7 @@ func newCmd(cfg *config.Config) *cobra.Command {
 		Short: "Create a new blog post",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := newBlog(cfg, args[0]); err != nil {
+			if err := blog.New(cfg, args[0]); err != nil {
 				return fmt.Errorf("failed to create blog post: %v", err)
 			}
 
@@ -25,51 +22,4 @@ func newCmd(cfg *config.Config) *cobra.Command {
 			return nil
 		},
 	}
-}
-
-type blog struct {
-	title         string
-	description   string
-	createdDate   string
-	publishedDate string
-	updatedDate   string
-	content       string
-	draft         bool
-}
-
-func newBlog(cfg *config.Config, title string) error {
-	b := blog{
-		title:         title,
-		description:   "A short description",
-		createdDate:   time.Now().Format(time.DateOnly),
-		publishedDate: "",
-		updatedDate:   time.Now().Format(time.DateOnly),
-		content:       "# Blog content starts here",
-		draft:         true,
-	}
-
-	title = strings.Replace(title, " ", "-", -1)
-	file := filepath.Join(cfg.LocalBlogsDir, strings.ToLower(title)+".md")
-
-	if _, err := os.Stat(file); err == nil {
-		return fmt.Errorf("file %s already exists", file)
-	}
-
-	if err := os.WriteFile(file, []byte(b.formatBlog()), 0644); err != nil {
-		return fmt.Errorf("failed to create file %s: %v", file, err)
-	}
-
-	return nil
-}
-
-func (b blog) formatBlog() string {
-	frontmatter := fmt.Sprintf(
-		"---\ntitle: %s\ndescription: %s\npublishedDate: %s\nupdatedDate: %s\n---\n",
-		b.title,
-		b.description,
-		b.publishedDate,
-		b.updatedDate,
-	)
-	blog := fmt.Sprintf("%s\n%s", frontmatter, b.content)
-	return blog
 }
