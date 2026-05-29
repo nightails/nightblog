@@ -55,18 +55,12 @@ func Load() (*Config, error) {
 }
 
 // Write saves the configuration to a JSON file in the user's home directory.
-func (cfg *Config) Write() error {
-	file, err := openConfigFile()
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
+func Write(cfg *Config) error {
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return err
 	}
-	if _, err := file.Write(data); err != nil {
+	if err := os.WriteFile(configFilePath(), data, 0o755); err != nil {
 		return err
 	}
 	return nil
@@ -79,7 +73,7 @@ func openConfigFile() (*os.File, error) {
 	_, err := os.Stat(configPath())
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if err := os.MkdirAll(configPath(), 0755); err != nil {
+			if err := os.MkdirAll(configPath(), 0o755); err != nil {
 				// TODO: replace with logger
 				return nil, fmt.Errorf("failed to create config directory: %w", err)
 			}
@@ -103,11 +97,17 @@ func openConfigFile() (*os.File, error) {
 				// TODO: replace with logger
 				return nil, fmt.Errorf("failed to marshal default config: %w", err)
 			}
+			// write default config to file
 			_, err = file.Write(data)
 			if err != nil {
 				file.Close()
 				// TODO: replace with logger
 				return nil, fmt.Errorf("failed to write default config to file: %w", err)
+			}
+			// rest cursor to the beginging of the file
+			if _, err := file.Seek(0, 0); err != nil {
+				file.Close()
+				return nil, fmt.Errorf("failed to seek the begining of the config file: %w", err)
 			}
 		} else {
 			return nil, fmt.Errorf("failed to open config file: %w", err)
