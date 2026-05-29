@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+
 	"nightblog/internal/blog"
 	"nightblog/internal/config"
 
@@ -18,7 +19,7 @@ func newCmd(cfg *config.Config) *cobra.Command {
 				return fmt.Errorf("failed to create blog post: %v", err)
 			}
 
-			fmt.Fprintln(cmd.OutOrStdout(), "Blog post created successfully")
+			fmt.Println("Blog post created successfully")
 			return nil
 		},
 	}

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+
 	"nightblog/internal/blog"
 	"nightblog/internal/config"
 
@@ -19,11 +20,13 @@ func listCmd(cfg *config.Config) *cobra.Command {
 				return fmt.Errorf("failed to list blogs: %w", err)
 			}
 
-			out := cmd.OutOrStdout()
-
-			fmt.Fprintln(out, "Blogs:")
-			for _, blog := range blogs {
-				fmt.Fprintf(out, " - %s\n", blog)
+			if len(blogs) == 0 {
+				fmt.Println("No blog found.")
+			} else {
+				fmt.Println("Blogs:")
+				for _, blog := range blogs {
+					fmt.Printf(" - %s\n", blog)
+				}
 			}
 
 			return nil
