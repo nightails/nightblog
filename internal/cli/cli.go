@@ -2,11 +2,12 @@ package cli
 
 import (
 	"nightblog/internal/config"
+	"nightblog/internal/storage"
 
 	"github.com/spf13/cobra"
 )
 
-func Execute(cfg *config.Config) error {
+func Execute(cfg *config.Config, stg *storage.Storage) error {
 	rootCmd := newRootCmd(cfg)
 	return rootCmd.Execute()
 }
