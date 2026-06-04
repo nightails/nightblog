@@ -3,12 +3,12 @@
 > [!WARNING]  
 > This project is currently in heavy development. Expect breaking changes and incomplete features.
 
-Nightblog is a terminal application for managing and editing blog posts. It handles creating and editing blog posts with predefined frontmatter compatible with Astro.
+Nightblog is a terminal application for managing and editing blog posts. It currently uses SQLite for storage and is transitioning from a file-based system.
 
 ## Requirements
 
 - **Go**: 1.26 or higher
-- **Git**: (Optional, for managing remote library)
+- **SQLite**: (Managed by the application)
 
 ## Setup
 
@@ -28,7 +28,7 @@ Nightblog is a terminal application for managing and editing blog posts. It hand
    `~/.config/nightblog/config.json`
 
    You can manually edit this file to change settings:
-   - `LocalBlogsDir`: Where your blogs are stored (default: `~/Documents/Blogs`).
+   - `DatabasePath`: Path to the SQLite database (default: `~/.cache/nightblog/blogs.db`).
    - `RemoteBlogsURL`: URL for remote blog synchronization (currently unused).
    - `Editor`: Your preferred editor (default: `nvim`).
 
@@ -47,13 +47,12 @@ go build -o nightblog main.go
 ```
 
 ### Available Commands
-- `new <title>`: Creates a new blog post file with basic frontmatter in your `LocalBlogsDir`.
-- `list`: Lists all blog posts in your `LocalBlogsDir`.
+- `new <title>`: Creates a new blog post entry in the database.
+- `list`: Lists all blog posts stored in the database.
 
 ## Features
-- [x] Create new blog posts with frontmatter.
-- [x] List existing blog posts.
-- [ ] Edit existing blog posts.
+- [x] SQLite storage integration.
+- [ ] Create and list blog posts via CLI (In transition).
 - [ ] Terminal User Interface (TUI) with Bubble Tea (Work in progress).
 - [ ] Remote synchronization.
 
@@ -63,7 +62,7 @@ go build -o nightblog main.go
   - `blog/`: Core blog logic (creation, listing, formatting).
   - `cli/`: Command-line interface logic using Cobra.
   - `config/`: Configuration loading, parsing, and management logic.
-  - `storage/`: Storage and directory initialization.
+  - `storage/`: Database initialization and SQLC-generated queries.
   - `tui/`: Planned Terminal User Interface implementation.
   - `ui/`: UI styles and components (Lipgloss).
 
@@ -71,6 +70,8 @@ go build -o nightblog main.go
 - [Cobra](https://github.com/spf13/cobra): CLI framework.
 - [Bubble Tea](https://github.com/charmbracelet/bubbletea): TUI framework (In development).
 - [Lipgloss](https://github.com/charmbracelet/lipgloss): Terminal styling.
+- [sqlc](https://sqlc.dev/): Type-safe SQL generator.
+- [modernc.org/sqlite](https://modernc.org/sqlite): CGO-free SQLite driver.
 
 ## License
 
