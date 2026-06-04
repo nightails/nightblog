@@ -20,19 +20,19 @@ func configFilePath() string {
 type Config struct {
 	LocalBlogsDir  string
 	RemoteBlogsURL string
+	DatabasePath   string
 
 	Editor string
 }
 
 func defaultConfig() Config {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return Config{}
-	}
+	homeDir, _ := os.UserHomeDir()
+	cacheDir, _ := os.UserCacheDir()
 
 	return Config{
 		LocalBlogsDir:  filepath.Join(homeDir, "Documents", "Blogs"),
 		RemoteBlogsURL: "",
+		DatabasePath:   filepath.Join(cacheDir, "nightblog", "blogs.db"),
 		Editor:         "nvim",
 	}
 }
