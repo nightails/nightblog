@@ -1,40 +1,28 @@
 package storage
 
 import (
-	"errors"
-	"fmt"
+	"database/sql"
+
 	"nightblog/internal/config"
-	"os"
 )
 
-func Init(cfg *config.Config) error {
-	if err := ensureLocal(cfg.LocalBlogsDir); err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			if err := makeLocalDir(cfg.LocalBlogsDir); err != nil {
-				return fmt.Errorf("failed to create storage directory: %v", err)
-			}
-		} else {
-			return fmt.Errorf("failed to verify storage path: %v", err)
-		}
-	}
-	// TODO: verify remote Database
-	return nil
+type Storage struct {
+	Database *sql.DB
+	Queries  *Queries
 }
 
-func ensureLocal(path string) error {
-	stat, err := os.Stat(path)
+func Init(cfg *config.Config) (*Storage, error) {
+	// initialize SQLite and SQLC queries
+	db, queries, err := initSQLite(cfg.DatabasePath)
 	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return err
-		}
-		return err
+		return nil, err
 	}
-	if !stat.IsDir() {
-		return fmt.Errorf("path %s is not a directory", path)
-	}
-	return nil
+
+	// TODO: verify remote Database
+
+	return &Storage{db, queries}, nil
 }
 
-func makeLocalDir(path string) error {
-	return os.MkdirAll(path, 0755)
+func (stg *Storage) CleanUp() {
+	stg.Database.Close()
 }
