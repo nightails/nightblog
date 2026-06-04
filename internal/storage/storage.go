@@ -2,27 +2,16 @@ package storage
 
 import (
 	"database/sql"
-
-	"nightblog/internal/config"
 )
 
-type Storage struct {
-	Database *sql.DB
-	Queries  *Queries
-}
-
-func Init(cfg *config.Config) (*Storage, error) {
+func Init(dbPath string) (*sql.DB, *Queries, error) {
 	// initialize SQLite and SQLC queries
-	db, queries, err := initSQLite(cfg.DatabasePath)
+	db, queries, err := initSQLite(dbPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// TODO: verify remote Database
 
-	return &Storage{db, queries}, nil
-}
-
-func (stg *Storage) CleanUp() {
-	stg.Database.Close()
+	return db, queries, nil
 }

@@ -1,18 +1,17 @@
 package cli
 
 import (
-	"nightblog/internal/config"
-	"nightblog/internal/storage"
+	"nightblog/internal/app"
 
 	"github.com/spf13/cobra"
 )
 
-func Execute(cfg *config.Config, stg *storage.Storage) error {
-	rootCmd := newRootCmd(cfg)
+func Execute(s *app.State) error {
+	rootCmd := newRootCmd(s)
 	return rootCmd.Execute()
 }
 
-func newRootCmd(cfg *config.Config) *cobra.Command {
+func newRootCmd(s *app.State) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "nightblog",
 		Short: "Manage blog posts from the terminal",
@@ -23,9 +22,6 @@ func newRootCmd(cfg *config.Config) *cobra.Command {
 			return cmd.Help()
 		},
 	}
-
-	rootCmd.AddCommand(newCmd(cfg))
-	rootCmd.AddCommand(listCmd(cfg))
 
 	return rootCmd
 }
