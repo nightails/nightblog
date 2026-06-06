@@ -1,14 +1,15 @@
 package cli
 
 import (
+	"context"
 	"nightblog/internal/app"
 
 	"github.com/spf13/cobra"
 )
 
-func Execute(s *app.State) error {
+func Execute(ctx context.Context, s *app.State) error {
 	rootCmd := newRootCmd(s)
-	return rootCmd.Execute()
+	return rootCmd.ExecuteContext(ctx)
 }
 
 func newRootCmd(s *app.State) *cobra.Command {
@@ -22,6 +23,9 @@ func newRootCmd(s *app.State) *cobra.Command {
 			return cmd.Help()
 		},
 	}
+
+	rootCmd.AddCommand(newCmd(s))
+	rootCmd.AddCommand(listCmd(s))
 
 	return rootCmd
 }
