@@ -66,7 +66,7 @@ func (q *Queries) GetPost(ctx context.Context, id int64) (Post, error) {
 
 const listPosts = `-- name: ListPosts :many
 SELECT id, title, description, content, created_at, updated_at, published_at, is_draft FROM posts
-ORDER BY created_at DESC
+ORDER BY created_at
 `
 
 func (q *Queries) ListPosts(ctx context.Context) ([]Post, error) {

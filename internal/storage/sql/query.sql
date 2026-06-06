@@ -5,7 +5,7 @@ RETURNING *;
 
 -- name: ListPosts :many
 SELECT * FROM posts
-ORDER BY created_at DESC;
+ORDER BY created_at;
 
 -- name: GetPost :one
 SELECT * FROM posts
