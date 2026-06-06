@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	_ "modernc.org/sqlite"
+
 	"nightblog/internal/app"
 	"nightblog/internal/cli"
 )
