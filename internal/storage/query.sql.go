@@ -131,3 +131,19 @@ func (q *Queries) RemovePost(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, removePost, id)
 	return err
 }
+
+const updatePostContent = `-- name: UpdatePostContent :exec
+UPDATE posts
+SET content = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?
+`
+
+type UpdatePostContentParams struct {
+	Content string
+	ID      int64
+}
+
+func (q *Queries) UpdatePostContent(ctx context.Context, arg UpdatePostContentParams) error {
+	_, err := q.db.ExecContext(ctx, updatePostContent, arg.Content, arg.ID)
+	return err
+}

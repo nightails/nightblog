@@ -18,3 +18,8 @@ WHERE title = ?;
 -- name: RemovePost :exec
 DELETE FROM posts
 WHERE id = ?;
+
+-- name: UpdatePostContent :exec
+UPDATE posts
+SET content = ?, updated_at = CURRENT_TIMESTAMP
+WHERE id = ?;
