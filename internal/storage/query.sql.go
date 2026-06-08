@@ -100,3 +100,13 @@ func (q *Queries) ListPosts(ctx context.Context) ([]Post, error) {
 	}
 	return items, nil
 }
+
+const removePost = `-- name: RemovePost :exec
+DELETE FROM posts
+WHERE id = ?
+`
+
+func (q *Queries) RemovePost(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, removePost, id)
+	return err
+}

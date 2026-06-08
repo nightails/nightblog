@@ -10,3 +10,7 @@ ORDER BY created_at;
 -- name: GetPost :one
 SELECT * FROM posts
 WHERE id = ?;
+
+-- name: RemovePost :exec
+DELETE FROM posts
+WHERE id = ?;
