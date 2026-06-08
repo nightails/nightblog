@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+
 	"nightblog/internal/app"
 
 	"github.com/spf13/cobra"
@@ -26,6 +27,7 @@ func newRootCmd(s *app.State) *cobra.Command {
 
 	rootCmd.AddCommand(newCmd(s))
 	rootCmd.AddCommand(listCmd(s))
+	rootCmd.AddCommand(removeCmd(s))
 
 	return rootCmd
 }
