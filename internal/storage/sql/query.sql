@@ -7,9 +7,13 @@ RETURNING *;
 SELECT * FROM posts
 ORDER BY created_at;
 
--- name: GetPost :one
+-- name: GetPostByID :one
 SELECT * FROM posts
 WHERE id = ?;
+
+-- name: GetPostByTitle :one
+SELECT * FROM posts
+WHERE title = ?;
 
 -- name: RemovePost :exec
 DELETE FROM posts
