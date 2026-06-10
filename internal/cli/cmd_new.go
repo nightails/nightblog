@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+
 	"nightblog/internal/app"
 	"nightblog/internal/storage"
 
@@ -17,7 +18,7 @@ func newCmd(s *app.State) *cobra.Command {
 			post, err := s.Queries.CreatePost(cmd.Context(), storage.CreatePostParams{
 				Title:       args[0],
 				Description: "A default description",
-				Content:     "",
+				Content:     "Posts content go here",
 				IsDraft:     true,
 			})
 			if err != nil {
