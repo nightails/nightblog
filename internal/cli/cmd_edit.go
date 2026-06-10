@@ -2,6 +2,7 @@ package cli
 
 import (
 	"os"
+	"os/exec"
 
 	"nightblog/internal/app"
 
@@ -23,11 +24,22 @@ func editCmd(s *app.State) *cobra.Command {
 			if err != nil {
 				return err
 			}
+			defer f.Close()
 
 			f.Write([]byte(post.Content))
-			defer f.Close()
+			openEditor(s.Config.Editor, f.Name())
 
 			return nil
 		},
 	}
+}
+
+func openEditor(editorPath string, filePath string) error {
+	cmd := exec.Command(editorPath, filePath)
+
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
 }
