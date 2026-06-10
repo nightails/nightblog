@@ -1,10 +1,12 @@
 package cli
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 
 	"nightblog/internal/app"
+	"nightblog/internal/storage"
 
 	"github.com/spf13/cobra"
 )
@@ -24,10 +26,28 @@ func editCmd(s *app.State) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			defer f.Close()
+			defer os.Remove(f.Name())
 
 			f.Write([]byte(post.Content))
-			openEditor(s.Config.Editor, f.Name())
+			// close temp file to prevent `file in use` conflict
+			f.Close()
+
+			if err := openEditor(s.Config.Editor, f.Name()); err != nil {
+				return fmt.Errorf("editor failed to open: %w", err)
+			}
+
+			content, err := os.ReadFile(f.Name())
+			if err != nil {
+				return err
+			}
+
+			s.Queries.UpdatePostContent(
+				cmd.Context(),
+				storage.UpdatePostContentParams{
+					ID:      post.ID,
+					Content: string(content),
+				},
+			)
 
 			return nil
 		},
