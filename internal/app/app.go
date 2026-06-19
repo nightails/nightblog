@@ -2,7 +2,9 @@ package app
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"os"
 
 	"nightblog/internal/config"
 	"nightblog/internal/storage"
@@ -15,9 +17,14 @@ type State struct {
 }
 
 func Init() (*State, error) {
-	cfg, err := config.Load()
-	if err != nil {
-		return nil, fmt.Errorf("failed to load config: %w", err)
+	cfg := &config.Config{}
+	if err := cfg.Load(); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			if err = cfg.CreateDefault(); err != nil {
+				return nil, err
+			}
+		}
+		return nil, err
 	}
 
 	db, qr, err := storage.Init(cfg.DatabasePath)
