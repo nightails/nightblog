@@ -7,10 +7,12 @@ package storage
 import (
 	"database/sql"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Post struct {
-	ID          int64
+	ID          uuid.UUID
 	Title       string
 	Description string
 	Content     string

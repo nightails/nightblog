@@ -1,6 +1,6 @@
 -- name: CreatePost :one
-INSERT INTO posts (title, description, content, is_draft)
-VALUES (?, ?, ?, ?)
+INSERT INTO posts (id, title, description, content, is_draft)
+VALUES (?, ?, ?, ?, ?)
 RETURNING *;
 
 -- name: ListPosts :many

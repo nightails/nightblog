@@ -6,6 +6,7 @@ import (
 	"nightblog/internal/app"
 	"nightblog/internal/storage"
 
+	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ func newCmd(s *app.State) *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			post, err := s.Queries.CreatePost(cmd.Context(), storage.CreatePostParams{
+				ID:          uuid.New(),
 				Title:       args[0],
 				Description: "A default description",
 				Content:     "Posts content go here",
@@ -25,7 +27,7 @@ func newCmd(s *app.State) *cobra.Command {
 				return err
 			}
 
-			fmt.Printf("Created post %d: %s\n", post.ID, post.Title)
+			fmt.Printf("Created post %v: %s\n", post.ID, post.Title)
 			return nil
 		},
 	}

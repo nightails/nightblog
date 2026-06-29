@@ -7,15 +7,18 @@ package storage
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 const createPost = `-- name: CreatePost :one
-INSERT INTO posts (title, description, content, is_draft)
-VALUES (?, ?, ?, ?)
+INSERT INTO posts (id, title, description, content, is_draft)
+VALUES (?, ?, ?, ?, ?)
 RETURNING id, title, description, content, created_at, updated_at, published_at, is_draft
 `
 
 type CreatePostParams struct {
+	ID          uuid.UUID
 	Title       string
 	Description string
 	Content     string
@@ -24,6 +27,7 @@ type CreatePostParams struct {
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
 	row := q.db.QueryRowContext(ctx, createPost,
+		arg.ID,
 		arg.Title,
 		arg.Description,
 		arg.Content,
@@ -48,7 +52,7 @@ SELECT id, title, description, content, created_at, updated_at, published_at, is
 WHERE id = ?
 `
 
-func (q *Queries) GetPostByID(ctx context.Context, id int64) (Post, error) {
+func (q *Queries) GetPostByID(ctx context.Context, id uuid.UUID) (Post, error) {
 	row := q.db.QueryRowContext(ctx, getPostByID, id)
 	var i Post
 	err := row.Scan(
@@ -127,7 +131,7 @@ DELETE FROM posts
 WHERE id = ?
 `
 
-func (q *Queries) RemovePost(ctx context.Context, id int64) error {
+func (q *Queries) RemovePost(ctx context.Context, id uuid.UUID) error {
 	_, err := q.db.ExecContext(ctx, removePost, id)
 	return err
 }
@@ -140,7 +144,7 @@ WHERE id = ?
 
 type UpdatePostContentParams struct {
 	Content string
-	ID      int64
+	ID      uuid.UUID
 }
 
 func (q *Queries) UpdatePostContent(ctx context.Context, arg UpdatePostContentParams) error {

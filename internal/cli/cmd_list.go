@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+
 	"nightblog/internal/app"
 
 	"github.com/spf13/cobra"
@@ -24,7 +25,7 @@ func listCmd(s *app.State) *cobra.Command {
 			}
 
 			for _, post := range posts {
-				fmt.Printf("%d. %s\n", post.ID, post.Title)
+				fmt.Printf("%v. %s\n", post.ID, post.Title)
 			}
 			return nil
 		},

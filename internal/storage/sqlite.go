@@ -32,7 +32,7 @@ func initSQLite(dbPath string) (*sql.DB, *Queries, error) {
 func createSchema(db *sql.DB) error {
 	schema := `
 	CREATE TABLE IF NOT EXISTS posts (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id TEXT PRIMARY KEY,
 		title TEXT NOT NULL,
 		description TEXT NOT NULL,
 		content TEXT NOT NULL,
